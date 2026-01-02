@@ -16,7 +16,7 @@ from ticketing_api.models import Customer, Ticket
 
 from npc_manager.database import engine as npc_engine, Base as NPCMgrBase, SessionLocal
 from npc_manager.models import (
-    PermissionProfile, Agent, ManagerControl
+    PermissionProfile, Agent, ManagerControl, ActionRequest, Approval, Execution, GuardrailEvent
 )
 
 
@@ -108,6 +108,11 @@ def setup_npc_manager_db():
     
     try:
         # Clear existing data (for re-running)
+        # Clear in order to respect foreign key constraints
+        db.query(Execution).delete()
+        db.query(Approval).delete()
+        db.query(GuardrailEvent).delete()
+        db.query(ActionRequest).delete()
         db.query(Agent).delete()
         db.query(PermissionProfile).delete()
         db.query(ManagerControl).delete()
